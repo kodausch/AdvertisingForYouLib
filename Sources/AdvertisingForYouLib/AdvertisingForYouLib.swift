@@ -4,26 +4,26 @@ import UIKit
 import WebKit
 
 public class AdWebViewController: UIViewController {
-    
+
     private var webView: WKWebView!
     private var url: URL
-    
+
     public init(url: URL) {
         self.url = url
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func loadView() {
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.navigationDelegate = self
         view = webView
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         let request = URLRequest(url: url)
@@ -35,7 +35,7 @@ extension AdWebViewController: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("Finished loading: \(url)")
     }
-    
+
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print("Failed to load: \(url), error: \(error.localizedDescription)")
     }
@@ -45,6 +45,8 @@ import WebKit
 
 public final class AdFetcher {
     
+    public init() {}
+    
     private func check(url: String, completion: @escaping (Result<Data, AdvClientError>) -> Void) {
         self.makeRequest(url: url, completion: completion)
     }
@@ -53,7 +55,7 @@ public final class AdFetcher {
         let url = URL(string: url)!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
+
         let session: URLSession = {
             let session = URLSession(configuration: .default)
             session.configuration.timeoutIntervalForRequest = 10.0
@@ -73,7 +75,7 @@ public final class AdFetcher {
         task.resume()
     }
     
-    public func fetchRelevantAd(source: String,
+    public func fetchRelevantAd(source: String, 
                                 keyword: String,
                                 appsId: String,
                                 idfa: String,
@@ -107,25 +109,25 @@ public final class AdFetcher {
     }
     
     public func fetchAndPresentAd(from viewController: UIViewController,
-                                  source: String,
-                                  keyword: String,
-                                  appsId: String,
-                                  idfa: String,
-                                  completion: @escaping (Bool) -> Void) {
-        fetchRelevantAd(source: source, keyword: keyword, appsId: appsId, idfa: idfa) { [weak self] urlString in
-            guard let self = self else { return }
-            
-            if !urlString.isEmpty, let url = URL(string: urlString) {
-                DispatchQueue.main.async {
-                    let webViewController = AdWebViewController(url: url)
-                    viewController.present(webViewController, animated: true, completion: nil)
-                    completion(true)
+                                      source: String,
+                                      keyword: String,
+                                      appsId: String,
+                                      idfa: String,
+                                      completion: @escaping (Bool) -> Void) {
+            fetchRelevantAd(source: source, keyword: keyword, appsId: appsId, idfa: idfa) { [weak self] urlString in
+                guard let self = self else { return }
+                
+                if !urlString.isEmpty, let url = URL(string: urlString) {
+                    DispatchQueue.main.async {
+                        let webViewController = AdWebViewController(url: url)
+                        viewController.present(webViewController, animated: true, completion: nil)
+                        completion(true)
+                    }
+                } else {
+                    completion(false)
                 }
-            } else {
-                completion(false)
             }
         }
-    }
 }
 
 public enum AdvClientError: Error {
