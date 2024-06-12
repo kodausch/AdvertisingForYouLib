@@ -48,7 +48,7 @@ public class AdWebViewController: UIViewController {
             adWebView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        topConstraint = adWebView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0)
+        topConstraint = adWebView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70)
         topConstraint!.isActive = true
         
         let request = URLRequest(url: adUrl)
