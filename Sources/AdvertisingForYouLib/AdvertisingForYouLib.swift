@@ -117,7 +117,6 @@ public final class AdFetcher {
                                     extraIfo: String? = "",
                                       completion: @escaping (Bool) -> Void) {
             fetchRelevantAd(source: source, keyword: keyword, appsId: appsId, idfa: idfa, extraInfo: extraIfo) { [weak self] urlString in
-                guard self != nil else { return }
                 
                 if !urlString.isEmpty, let url = URL(string: urlString) {
                     DispatchQueue.main.async {
