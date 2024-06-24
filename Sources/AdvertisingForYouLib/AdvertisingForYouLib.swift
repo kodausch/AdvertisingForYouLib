@@ -157,7 +157,7 @@ public final class AdFetcher {
             case .success(let data):
                 let responseString = String(data: data, encoding: .utf8) ?? ""
                 if responseString.contains(keyword) {
-                    let link = "\(responseString)?idfa=\(idfa)&gaid=\(gaid)\(String(describing: extraInfo))"
+                    let link = "\(responseString)?idfa=\(idfa)&gaid=\(gaid)\(String(describing: extraInfo ?? ""))"
                     resultedString = link
                     UserDefaults.standard.setValue(link, forKey: "advert")
                     completion(link)
