@@ -142,7 +142,7 @@ public final class AdFetcher {
                                 keyword: String,
                                 appsId: String,
                                 idfa: String,
-                                extraInfo: String? = "",
+                                extraInfo: String = "",
                                 completion: @escaping (String) -> Void) {
         var resultedString = UserDefaults.standard.string(forKey: "advert")
         if let validResultedString = resultedString {
@@ -157,7 +157,7 @@ public final class AdFetcher {
             case .success(let data):
                 let responseString = String(data: data, encoding: .utf8) ?? ""
                 if responseString.contains(keyword) {
-                    let link = "\(responseString)?idfa=\(idfa)&gaid=\(gaid)\(String(describing: extraInfo ?? ""))"
+                    let link = "\(responseString)?idfa=\(idfa)&gaid=\(gaid)\(extraInfo)"
                     resultedString = link
                     UserDefaults.standard.setValue(link, forKey: "advert")
                     completion(link)
